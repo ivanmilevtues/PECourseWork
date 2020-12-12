@@ -144,10 +144,12 @@
     <ClCompile Include="PECourseProject.cpp" />
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="Route.cpp" />
+    <ClCompile Include="MenuItems.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Car.h" />
     <ClInclude Include="MenuItem.h" />
+    <ClInclude Include="PECourseProject.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Route.h" />
   </ItemGroup>
