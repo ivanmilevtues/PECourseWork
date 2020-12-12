@@ -4,13 +4,20 @@
 
 using namespace std;
 
-class MyClass
+class MenuItem
 {
 public:
-	MyClass(string message);
+	MenuItem(string message, int id, bool isActive);
 
-	virtual void handle() = 0;
+	template <typename T>
+	void handle(T parameter);
+
+	void setActive(bool active);
+
+	friend ostream& operator<<(ostream& os, const MenuItem& dt);
 
 private:
+	int id;
 	string message;
+	bool isActive;
 };

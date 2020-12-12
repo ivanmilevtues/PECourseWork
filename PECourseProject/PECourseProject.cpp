@@ -19,6 +19,17 @@
 
 #include <iostream>
 #include "Car.h"
+#include "MenuItem.h"
+#include "MenuItems.cpp"
+
+int menu() {
+    vector<MenuItem> items;
+    items.push_back(AddCarMenuItem());
+
+    while (true) {
+        system("cls");
+    }
+}
 
 int main()
 {
