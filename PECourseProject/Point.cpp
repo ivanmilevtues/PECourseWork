@@ -7,7 +7,7 @@ Point::Point(int x, int y)
 	this->y = y;
 }
 
-int Point::distanceTo(Point other)
+double Point::distanceTo(Point other)
 {
 	return sqrt(pow(other.x - this->x, 2) + pow(other.y - this->y, 2));
 }

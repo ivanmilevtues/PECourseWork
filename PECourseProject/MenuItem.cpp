@@ -12,15 +12,15 @@ void MenuItem::setActive(bool isActive)
 	this->isActive = isActive;
 }
 
-template<typename T>
-inline void MenuItem::handle(T parameter)
+std::ostream& operator<<(std::ostream& os, const MenuItem& item)
 {
-	throw "Unimplmented method";
-}
-
-ostream& operator<<(ostream& os, const MenuItem& item)
-{
-	os << item.isActive ? "> " : "  ";
-	os << item.id << ". " << item.message;
+	if (item.isActive)
+	{
+		os << "> " << item.id << ". " << item.message;
+	}
+	else
+	{
+		os << "  " << item.id << ". " << item.message;
+	}
 	return os;
 }

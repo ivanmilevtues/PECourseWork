@@ -1,23 +1,23 @@
+#pragma once
 #include <iostream>
 #include <string>
-
-
-using namespace std;
+#include <vector>
+#include "Car.h"
+#include "TaxiState.h"
 
 class MenuItem
 {
 public:
-	MenuItem(string message, int id, bool isActive);
-
-	template <typename T>
-	void handle(T parameter);
+	MenuItem(std::string message, int id, bool isActive);
 
 	void setActive(bool active);
 
-	friend ostream& operator<<(ostream& os, const MenuItem& dt);
+	virtual void handle(TaxiState parameter) = 0;
+
+	friend std::ostream& operator<<(std::ostream& os, const MenuItem& dt);
 
 private:
 	int id;
-	string message;
+	std::string message;
 	bool isActive;
 };
