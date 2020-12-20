@@ -8,9 +8,9 @@ class TaxiState
 public:
 	TaxiState();
 
-	std::vector<Car> getCars();
+	std::vector<Car>* getCars();
 
-	std::vector<Route> getRoutes();
+	std::vector<Route>* getRoutes();
 
 private:
 	std::vector<Car> cars;
