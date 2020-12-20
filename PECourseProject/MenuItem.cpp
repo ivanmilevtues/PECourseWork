@@ -67,5 +67,3 @@ std::ostream& operator<<(std::ostream& os, const MenuItem& item)
 	}
 	return os;
 }
-
-
