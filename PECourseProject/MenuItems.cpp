@@ -1,6 +1,7 @@
 #include "MenuItem.h"
 #include "Car.h"
 #include "Route.h"
+#include "Menu.h"
 #include <Windows.h>
 #include <iostream>
 #include <conio.h>
@@ -108,7 +109,7 @@ public:
 		for (std::vector<Route>::iterator it = state.getRoutes()->begin(); it != state.getRoutes()->end(); it++, id++) {
 			pickRoute.push_back(new PickRouteForTaxi(car, (*it), id, (*it).getName(), id == 1));
 		}
-		MenuItem::createMenu(pickRoute, state);
+		(new Menu(pickRoute, state))->show();
 	}
 };
 
@@ -124,7 +125,6 @@ public:
 		for (std::vector<Car>::iterator it = state.getCars()->begin(); it != state.getCars()->end(); it++, index++) {
 			pickTaxi.push_back(new ListRoutesForTaxi(*it, index, (*it).getBrand() + (*it).getModel(), index == 1));
 		}
-
-		MenuItem::createMenu(pickTaxi, state);
+		(new Menu(pickTaxi, state))->show();
 	}
 };

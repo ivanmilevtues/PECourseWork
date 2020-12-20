@@ -14,8 +14,6 @@ public:
 
 	virtual void handle(TaxiState& parameter) = 0;
 
-	static void createMenu(std::vector<MenuItem*>& items, TaxiState state);
-
 	friend std::ostream& operator<<(std::ostream& os, const MenuItem& dt);
 
 private:

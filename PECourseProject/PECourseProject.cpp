@@ -29,7 +29,7 @@ void menu(TaxiState state) {
     items.push_back(new ListTaxis());
     items.push_back(new ExitMenuItem());
 
-    MenuItem::createMenu(items, state);
+    (new Menu(items, state))->show();
 }
 
 int main()
