@@ -8,11 +8,16 @@
 class MenuItem
 {
 public:
+	enum class operationStatus
+	{
+		ExitMenu = 0, Continue = 1
+	};
+
 	MenuItem(std::string message, int id, bool isActive);
 
 	void setActive(bool active);
 
-	virtual void handle(TaxiState& parameter) = 0;
+	virtual operationStatus handle(TaxiState& parameter) = 0;
 
 	friend std::ostream& operator<<(std::ostream& os, const MenuItem& dt);
 

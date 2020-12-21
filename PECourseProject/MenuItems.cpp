@@ -12,7 +12,7 @@ public:
 	CreateCar(bool isActive) : MenuItem("Add new car", 1, isActive) {
 	}
 
-	void handle(TaxiState& state) {
+	operationStatus handle(TaxiState& state) {
 		std::string brand, model;
 		unsigned int years, maximumLoadInKg;
 		unsigned short numberOfSeats;
@@ -41,6 +41,7 @@ public:
 
 		state.getCars()->push_back(Car(brand, model, years, numberOfSeats, maximumLoadInKg, lph));
 		std::cout << "A new car was added.";	
+		return operationStatus::Continue;
 	}
 };
 
@@ -50,7 +51,7 @@ public:
 	CreateRoute(bool isActive) : MenuItem("Add new route", 2, isActive)
 	{}
 
-	void handle(TaxiState& state) {
+	operationStatus handle(TaxiState& state) {
 		std::string routeName;
 
 		system("cls");
@@ -67,6 +68,7 @@ public:
 			std::cout << "Point created!" << std::endl;
 			std::cout << "Press q to quit. To continue press any other key." << std::endl;
 		} while (_getch() != 'q');
+		return operationStatus::Continue;
 	}
 };
 
@@ -75,8 +77,8 @@ public:
 	ExitMenuItem() : MenuItem("Exit", 4, false) 
 	{}
 
-	void handle(TaxiState& state) {
-		exit(0);
+	operationStatus handle(TaxiState& state) {
+		return operationStatus::ExitMenu;
 	}
 };
 
@@ -88,11 +90,13 @@ public:
 	PickRouteForTaxi(Car& car, Route& route, int index, std::string message, bool isActive) : MenuItem(message, index, isActive), car(car), route(route) {
 	}
 
-	void handle(TaxiState& state) {
+	operationStatus handle(TaxiState& state) {
 		system("cls");
 		car.setRoute(route);
+		std::cout << "Route " << route.getName() << " added for taxi: '" << car.getModel() << "'" << std::endl;
 		std::cout << "Press any key to continue" << std::endl;
 		_getch();
+		return operationStatus::ExitMenu;
 	}
 };
 
@@ -102,7 +106,7 @@ public:
 	ListRoutesForTaxi(Car& car, int index, std::string message, bool isActive) : MenuItem(message, index, isActive), car(car) {
 	}
 
-	void handle(TaxiState& state) {
+	operationStatus handle(TaxiState& state) {
 		system("cls");
 		int id = 1;
 		std::vector<MenuItem*> pickRoute;
@@ -110,6 +114,7 @@ public:
 			pickRoute.push_back(new PickRouteForTaxi(car, (*it), id, (*it).getName(), id == 1));
 		}
 		(new Menu(pickRoute, state))->show();
+		return operationStatus::ExitMenu;
 	}
 };
 
@@ -118,7 +123,7 @@ public:
 	ListTaxis() : MenuItem("Add route to taxi", 3, false)
 	{}
 
-	void handle(TaxiState& state) {
+	operationStatus handle(TaxiState& state) {
 		system("cls");
 		std::vector<MenuItem *> pickTaxi;
 		int index = 1;
@@ -126,5 +131,6 @@ public:
 			pickTaxi.push_back(new ListRoutesForTaxi(*it, index, (*it).getBrand() + (*it).getModel(), index == 1));
 		}
 		(new Menu(pickTaxi, state))->show();
+		return operationStatus::Continue;
 	}
 };
