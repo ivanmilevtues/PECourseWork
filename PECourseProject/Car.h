@@ -20,6 +20,7 @@ public:
 	unsigned int getMaximumLoadInKg();
 	float getLph();
 	void setRoute(Route route);
+	friend std::ostream& operator<<(std::ostream& os, const Car& car);
 
 private:
 	std::string brand;

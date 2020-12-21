@@ -14,6 +14,8 @@ public:
 	int getLength();
 	std::string getName();
 
+	friend std::ostream& operator<<(std::ostream& os, const Route& route);
+
 private:
 	std::vector<Point> points;
 	int numberOfDailyDrives;
