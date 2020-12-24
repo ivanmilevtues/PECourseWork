@@ -6,6 +6,7 @@
 #include <iostream>
 #include <conio.h>
 #include <vector>
+#include <fstream>
 
 class CreateCar : public MenuItem {
 public:
@@ -132,5 +133,39 @@ public:
 		}
 		(new Menu(pickTaxi, state))->show();
 		return operationStatus::Continue;
+	}
+};
+
+class SaveToFile : public MenuItem {
+public:
+	SaveToFile() : MenuItem("Save current configuration to file", 4, false) {}
+
+	operationStatus handle(TaxiState& state) {
+		system("cls");
+		std::string fileName;
+		std::ofstream file;
+		std::cout << "Enter filename to save the configuration in" << std::endl;
+		std::cin >> fileName;
+		file.open(fileName);
+		for (std::vector<Car>::iterator it = state.getCars()->begin(); it != state.getCars()->end(); it++) {
+			file << *it;
+		}
+		return operationStatus::Continue;
+	}
+};
+
+class LoadFromFile : public MenuItem {
+public:
+	LoadFromFile() : MenuItem("Load configuration from file", 5, false) {}
+
+	operationStatus handle(TaxiState& state) {
+		system("cls");
+		std::string fileName;
+		std::ifstream file;
+		std::cout << "Enter filename to load configuration from" << std::endl;
+		std::cin >> fileName;
+		file.open(fileName);
+		//Car car("sdasd");
+		//file >> car;
 	}
 };

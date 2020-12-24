@@ -27,6 +27,7 @@ void menu(TaxiState state) {
     items.push_back(new CreateCar(true));
     items.push_back(new CreateRoute(false));
     items.push_back(new ListTaxis());
+    items.push_back(new SaveToFile());
     items.push_back(new ExitMenuItem());
 
     (new Menu(items, state))->show();

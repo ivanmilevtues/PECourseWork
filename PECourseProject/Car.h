@@ -21,6 +21,7 @@ public:
 	float getLph();
 	void setRoute(Route route);
 	friend std::ostream& operator<<(std::ostream& os, const Car& car);
+	friend std::istream& operator>>(std::istream& is, Car& car);
 
 private:
 	std::string brand;

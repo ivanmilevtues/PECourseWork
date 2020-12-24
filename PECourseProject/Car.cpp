@@ -77,3 +77,9 @@ std::ostream& operator<<(std::ostream& os, const Car& car)
 		<< car.route << std::endl;
 	return os;
 }
+
+std::istream& operator>>(std::istream& is, Car& car)
+{
+	is >> car.brand >> car.model >> car.years >> car.numberOfSeats >> car.maximumLoadInKg >> car.lph;
+	return is;
+}
