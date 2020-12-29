@@ -59,7 +59,6 @@ public:
 		std::cout << "Pick name for the route" << std::endl;
 		std::cin >> routeName;
 		Route route = Route(routeName);
-		state.getRoutes()->push_back(route);
 		std::cout << "New route added" << std::endl;
 		do {
 			int x, y;
@@ -69,6 +68,7 @@ public:
 			std::cout << "Point created!" << std::endl;
 			std::cout << "Press q to quit. To continue press any other key." << std::endl;
 		} while (_getch() != 'q');
+		state.getRoutes()->push_back(route);
 		return operationStatus::Continue;
 	}
 };
@@ -113,7 +113,7 @@ public:
 		std::vector<MenuItem*> pickRoute;
 		for (int id = 0; id < state.getRoutes()->size(); id++) {
 			Route& route = state.getRoutes()->at(id);
-			pickRoute.push_back(new PickRouteForTaxi(car, route, id, route.getName(), id == 1));
+			pickRoute.push_back(new PickRouteForTaxi(car, route, id + 1, route.getName(), id == 0));
 		}
 		(new Menu(pickRoute, state))->show();
 		return operationStatus::ExitMenu;
