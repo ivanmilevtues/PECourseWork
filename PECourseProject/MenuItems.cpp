@@ -85,7 +85,7 @@ public:
 
 
 class PickRouteForTaxi : public MenuItem {
-	Car car;
+	Car& car;
 	Route route;
 public:
 	PickRouteForTaxi(Car& car, Route& route, int index, std::string message, bool isActive) : MenuItem(message, index, isActive), car(car), route(route) {
@@ -102,7 +102,7 @@ public:
 };
 
 class ListRoutesForTaxi : public MenuItem {
-	Car car;
+	Car& car;
 public:
 	ListRoutesForTaxi(Car& car, int index, std::string message, bool isActive) : MenuItem(message, index, isActive), car(car) {
 	}
@@ -111,8 +111,9 @@ public:
 		system("cls");
 		int id = 1;
 		std::vector<MenuItem*> pickRoute;
-		for (std::vector<Route>::iterator it = state.getRoutes()->begin(); it != state.getRoutes()->end(); it++, id++) {
-			pickRoute.push_back(new PickRouteForTaxi(car, (*it), id, (*it).getName(), id == 1));
+		for (int id = 0; id < state.getRoutes()->size(); id++) {
+			Route& route = state.getRoutes()->at(id);
+			pickRoute.push_back(new PickRouteForTaxi(car, route, id, route.getName(), id == 1));
 		}
 		(new Menu(pickRoute, state))->show();
 		return operationStatus::ExitMenu;
@@ -126,10 +127,11 @@ public:
 
 	operationStatus handle(TaxiState& state) {
 		system("cls");
-		std::vector<MenuItem *> pickTaxi;
-		int index = 1;
-		for (std::vector<Car>::iterator it = state.getCars()->begin(); it != state.getCars()->end(); it++, index++) {
-			pickTaxi.push_back(new ListRoutesForTaxi(*it, index, (*it).getBrand() + (*it).getModel(), index == 1));
+		std::vector<MenuItem*> pickTaxi;
+		for (int index = 0; index < state.getCars()->size(); index++) {
+			Car& car = state.getCars()->at(index);
+			pickTaxi.push_back(new ListRoutesForTaxi(car, index + 1,
+								car.getBrand() + car.getModel(), index == 0)); // the first element should be active
 		}
 		(new Menu(pickTaxi, state))->show();
 		return operationStatus::Continue;

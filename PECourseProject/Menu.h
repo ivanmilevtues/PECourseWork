@@ -6,7 +6,7 @@ class Menu
 {
 	std::vector<MenuItem*> items;
 	Menu* upperLevelMenu;
-	TaxiState state;
+	TaxiState& state;
 
 public:
 	Menu(std::vector<MenuItem*>& items, TaxiState& state): items(items), upperLevelMenu(NULL), state(state) {
