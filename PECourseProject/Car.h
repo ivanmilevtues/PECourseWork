@@ -6,6 +6,7 @@
 class Car
 {
 public:
+	Car(); // use only for populating data with istream
 	Car(std::string brand, std::string model, unsigned int years, unsigned short numberOfSeats, unsigned int maximumLoadInKg, float lph);
 
 	void setBrand(std::string brand);
@@ -19,8 +20,11 @@ public:
 	unsigned short getNumberOfSeats();
 	unsigned int getMaximumLoadInKg();
 	float getLph();
+	float calculateNeededPetrol();
 	void setRoute(Route route);
 	friend std::ostream& operator<<(std::ostream& os, const Car& car);
+	friend std::ofstream& operator<<(std::ofstream& os, const Car& car);
+
 	friend std::istream& operator>>(std::istream& is, Car& car);
 
 private:

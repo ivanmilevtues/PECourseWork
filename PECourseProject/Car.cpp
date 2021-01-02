@@ -1,4 +1,11 @@
 #include "Car.h"
+#include <fstream>
+
+
+// This should be used only for istream population of the object.
+Car::Car()
+{
+}
 
 Car::Car(std::string brand, std::string model, unsigned int years, unsigned short numberOfSeats, unsigned int maximumLoadInKg, float lph)
 {
@@ -65,6 +72,12 @@ float Car::getLph()
 	return this->lph;
 }
 
+float Car::calculateNeededPetrol()
+{
+	float routeLength = route.getLength() * route.getNumberOfDailyDrives();
+	return routeLength * lph / 100;
+}
+
 void Car::setRoute(Route route)
 {
 	this->route = route;
@@ -75,6 +88,13 @@ std::ostream& operator<<(std::ostream& os, const Car& car)
 	os << car.brand << " " << car.model << " " << car.years << " "
 		<< car.numberOfSeats << " " << car.maximumLoadInKg << " " << car.lph << " "
 		<< car.route << std::endl;
+	return os;
+}
+
+std::ofstream& operator<<(std::ofstream& os, const Car& car)
+{
+	os << "Car:" << std::endl << car.brand << " " << car.model << " " << car.years << " "
+		<< car.numberOfSeats << " " << car.maximumLoadInKg << " " << car.lph << std::endl;
 	return os;
 }
 

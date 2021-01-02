@@ -2,11 +2,11 @@
 #include <iostream>
 #include "Point.h"
 
-Point::Point(int x, int y)
-{
-	this->x = x;
-	this->y = y;
-}
+Point::Point(): x(0), y(0)
+{}
+
+Point::Point(int x, int y) :x(x), y(y)
+{}
 
 double Point::distanceTo(Point other)
 {
@@ -17,4 +17,10 @@ std::ostream& operator<<(std::ostream& os, const Point& point)
 {
 	os << point.x << " " << point.y << std::endl;
 	return os;
+}
+
+std::istream& operator>>(std::istream& is, Point& point)
+{
+	is >> point.x >> point.y;
+	return is;
 }

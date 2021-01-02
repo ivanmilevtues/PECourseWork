@@ -7,6 +7,7 @@
 #include <conio.h>
 #include <vector>
 #include <fstream>
+#include <sstream>
 
 class CreateCar : public MenuItem {
 public:
@@ -49,16 +50,20 @@ public:
 
 class CreateRoute : public MenuItem {
 public:
-	CreateRoute(bool isActive) : MenuItem("Add new route", 2, isActive)
+	CreateRoute(int id) : MenuItem("Add new route", id, false)
 	{}
 
 	operationStatus handle(TaxiState& state) {
 		std::string routeName;
+		int dailyDrives;
 
 		system("cls");
 		std::cout << "Pick name for the route" << std::endl;
 		std::cin >> routeName;
-		Route route = Route(routeName);
+		std::cout << "How many times the route will be done in a day" << std::endl;
+		std::cin >> dailyDrives;
+
+		Route route = Route(routeName, dailyDrives);
 		std::cout << "New route added" << std::endl;
 		do {
 			int x, y;
@@ -68,6 +73,7 @@ public:
 			std::cout << "Point created!" << std::endl;
 			std::cout << "Press q to quit. To continue press any other key." << std::endl;
 		} while (_getch() != 'q');
+
 		state.getRoutes()->push_back(route);
 		return operationStatus::Continue;
 	}
@@ -75,7 +81,7 @@ public:
 
 class ExitMenuItem : public MenuItem {
 public:
-	ExitMenuItem() : MenuItem("Exit", 4, false) 
+	ExitMenuItem(int id) : MenuItem("Exit", id, false) 
 	{}
 
 	operationStatus handle(TaxiState& state) {
@@ -94,7 +100,8 @@ public:
 	operationStatus handle(TaxiState& state) {
 		system("cls");
 		car.setRoute(route);
-		std::cout << "Route " << route.getName() << " added for taxi: '" << car.getModel() << "'" << std::endl;
+		std::cout << "Route " << route.getName() << " selected for taxi: '" << car.getModel() << "'" << std::endl;
+		std::cout << "For this route "<< car.calculateNeededPetrol() << " liters will be needed.";
 		std::cout << "Press any key to continue" << std::endl;
 		_getch();
 		return operationStatus::ExitMenu;
@@ -122,7 +129,7 @@ public:
 
 class ListTaxis : public MenuItem {
 public:
-	ListTaxis() : MenuItem("Add route to taxi", 3, false)
+	ListTaxis(int id) : MenuItem("Add route to taxi", id, false)
 	{}
 
 	operationStatus handle(TaxiState& state) {
@@ -140,7 +147,7 @@ public:
 
 class SaveToFile : public MenuItem {
 public:
-	SaveToFile() : MenuItem("Save current configuration to file", 4, false) {}
+	SaveToFile(int id) : MenuItem("Save current configuration to file", id, false) {}
 
 	operationStatus handle(TaxiState& state) {
 		system("cls");
@@ -152,22 +159,66 @@ public:
 		for (std::vector<Car>::iterator it = state.getCars()->begin(); it != state.getCars()->end(); it++) {
 			file << *it;
 		}
+
+		for (std::vector<Route>::iterator it = state.getRoutes()->begin(); it != state.getRoutes()->end(); it++) {
+			file << *it;
+		}
+
 		return operationStatus::Continue;
 	}
 };
 
 class LoadFromFile : public MenuItem {
 public:
-	LoadFromFile() : MenuItem("Load configuration from file", 5, false) {}
+	LoadFromFile(int id) : MenuItem("Load configuration from file", id, false) {}
 
 	operationStatus handle(TaxiState& state) {
 		system("cls");
-		std::string fileName;
+		enum class ReadState
+		{
+			Car = 0,
+			Route = 1,
+			Point = 2
+		};
+		ReadState readState = ReadState::Car; // This should be always the first state in the file
+		std::string fileName, line;
 		std::ifstream file;
 		std::cout << "Enter filename to load configuration from" << std::endl;
 		std::cin >> fileName;
 		file.open(fileName);
-		//Car car("sdasd");
-		//file >> car;
+		Car* car = NULL;
+		Route* route = NULL;
+		Point* point = NULL;
+		while (std::getline(file, line)) {
+			if (!line.compare("Car:")) {
+				readState = ReadState::Car;
+				car = new Car();
+				continue;
+			}
+			else if (!line.compare("Route:")) {
+				readState = ReadState::Route;
+				route = new Route();
+				continue;
+			}
+			std::istringstream iss(line);
+			switch (readState) {
+			case ReadState::Car:
+				iss >> *car;
+				state.getCars()->push_back(*car);
+				break;
+			case ReadState::Route:
+				iss >> *route;
+				state.getRoutes()->push_back(*route);
+				readState = ReadState::Point;
+				break;
+			case ReadState::Point:
+				point = new Point();
+				iss >> *point;
+				state.getRoutes()->back().addPoint(*point);
+				break;
+			}
+		}
+
+		return operationStatus::Continue;
 	}
 };

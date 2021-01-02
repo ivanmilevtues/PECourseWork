@@ -1,6 +1,3 @@
-// PECourseProject.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 /*
     Създайте приложение, което да поддържа информация за маршрутни таксита.
     Данните за колите са марка, модел, години, колко местна е, с каква товароподемност и
@@ -17,6 +14,10 @@
     Задължително данните да се въвеждат динамично, чрез меню.
 */
 
+/// TODO:
+/// Change new Menu -> with just menu
+/// Check on destructos and destructing items in vectors
+
 #include <iostream>
 #include <conio.h>
 #include "MenuItem.h"
@@ -25,12 +26,14 @@
 void menu(TaxiState state) {
     std::vector<MenuItem *> items;
     items.push_back(new CreateCar(true));
-    items.push_back(new CreateRoute(false));
-    items.push_back(new ListTaxis());
-    items.push_back(new SaveToFile());
-    items.push_back(new ExitMenuItem());
+    items.push_back(new CreateRoute(2));
+    items.push_back(new ListTaxis(3));
+    items.push_back(new SaveToFile(4));
+    items.push_back(new LoadFromFile(5));
+    items.push_back(new ExitMenuItem(6));
 
-    (new Menu(items, state))->show();
+    Menu menu = Menu(items, state);
+    menu.show();
 }
 
 int main()

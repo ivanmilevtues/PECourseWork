@@ -7,6 +7,7 @@ void Menu::show() {
     while (true)
     {
         system("cls");
+        std::cout << "To move in the menu use W(up), S(down), Enter(to select)"<< std::endl << std::endl;
         for (std::vector<MenuItem*>::iterator it = items.begin(); it < items.end(); it++) {
             std::cout << *(*it) << std::endl;
         }
