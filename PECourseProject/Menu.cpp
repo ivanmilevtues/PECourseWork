@@ -3,7 +3,7 @@
 
 void Menu::show() {
     int selected = 0;
-    MenuItem::operationStatus handleResult = MenuItem::operationStatus::Continue;
+    MenuItem::OperationStatus handleResult = MenuItem::OperationStatus::Continue;
     while (true)
     {
         system("cls");
@@ -41,7 +41,7 @@ void Menu::show() {
             handleResult = items.at(selected)->handle(state);
             break;
         }
-        if (handleResult == MenuItem::operationStatus::ExitMenu) {
+        if (handleResult == MenuItem::OperationStatus::ExitMenu) {
             break;
         }
     }

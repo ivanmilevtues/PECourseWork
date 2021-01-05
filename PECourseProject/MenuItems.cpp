@@ -14,7 +14,7 @@ public:
 	CreateCar(bool isActive) : MenuItem("Add new car", 1, isActive) {
 	}
 
-	operationStatus handle(TaxiState& state) {
+	OperationStatus handle(TaxiState& state) {
 		std::string brand, model;
 		unsigned int years, maximumLoadInKg;
 		unsigned short numberOfSeats;
@@ -24,10 +24,10 @@ public:
 		std::cout << "Create new car" << std::endl;
 
 		std::cout << "Enter brand name:";
-		std::cin >> brand;
+		getline(std::cin, brand);
 
 		std::cout << std::endl << "Enter model name:";
-		std::cin >> model;
+		getline(std::cin, model);
 
 		std::cout << std::endl << "Enter how old the car is:";
 		std::cin >> years;
@@ -42,8 +42,8 @@ public:
 		std::cin >> lph;
 
 		state.getCars()->push_back(Car(brand, model, years, numberOfSeats, maximumLoadInKg, lph));
-		std::cout << "A new car was added.";	
-		return operationStatus::Continue;
+		std::cout << "A new car was added.";
+		return OperationStatus::Continue;
 	}
 };
 
@@ -53,13 +53,13 @@ public:
 	CreateRoute(int id) : MenuItem("Add new route", id, false)
 	{}
 
-	operationStatus handle(TaxiState& state) {
+	OperationStatus handle(TaxiState& state) {
 		std::string routeName;
 		int dailyDrives;
 
 		system("cls");
 		std::cout << "Pick name for the route" << std::endl;
-		std::cin >> routeName;
+		getline(std::cin, routeName);
 		std::cout << "How many times the route will be done in a day" << std::endl;
 		std::cin >> dailyDrives;
 
@@ -75,73 +75,76 @@ public:
 		} while (_getch() != 'q');
 
 		state.getRoutes()->push_back(route);
-		return operationStatus::Continue;
+		return OperationStatus::Continue;
 	}
 };
 
-class ExitMenuItem : public MenuItem {
+class ExitMenu : public MenuItem {
 public:
-	ExitMenuItem(int id) : MenuItem("Exit", id, false) 
+	ExitMenu(int id) : MenuItem("Exit", id, false) 
 	{}
 
-	operationStatus handle(TaxiState& state) {
-		return operationStatus::ExitMenu;
+	OperationStatus handle(TaxiState& state) {
+		return OperationStatus::ExitMenu;
 	}
 };
 
 
 class PickRouteForTaxi : public MenuItem {
 	Car& car;
-	Route route;
+	Route& route;
 public:
-	PickRouteForTaxi(Car& car, Route& route, int index, std::string message, bool isActive) : MenuItem(message, index, isActive), car(car), route(route) {
-	}
+	PickRouteForTaxi(Car& car, Route& route, int index, std::string message, bool isActive) : MenuItem(message, index, isActive), car(car), route(route)
+	{}
 
-	operationStatus handle(TaxiState& state) {
+	OperationStatus handle(TaxiState& state) {
 		system("cls");
 		car.setRoute(route);
 		std::cout << "Route " << route.getName() << " selected for taxi: '" << car.getModel() << "'" << std::endl;
 		std::cout << "For this route "<< car.calculateNeededPetrol() << " liters will be needed.";
 		std::cout << "Press any key to continue" << std::endl;
 		_getch();
-		return operationStatus::ExitMenu;
+		return OperationStatus::ExitMenu;
 	}
 };
 
 class ListRoutesForTaxi : public MenuItem {
 	Car& car;
 public:
-	ListRoutesForTaxi(Car& car, int index, std::string message, bool isActive) : MenuItem(message, index, isActive), car(car) {
-	}
+	ListRoutesForTaxi(Car& car, int index, std::string message, bool isActive) : MenuItem(message, index, isActive), car(car)
+	{}
 
-	operationStatus handle(TaxiState& state) {
+	OperationStatus handle(TaxiState& state) {
 		system("cls");
 		int id = 1;
 		std::vector<MenuItem*> pickRoute;
 		for (int id = 0; id < state.getRoutes()->size(); id++) {
 			Route& route = state.getRoutes()->at(id);
-			pickRoute.push_back(new PickRouteForTaxi(car, route, id + 1, route.getName(), id == 0));
+			MenuItem* item = new PickRouteForTaxi(car, route, id + 1, route.getName(), id == 0);
+			pickRoute.push_back(item);
+			delete item;
 		}
-		(new Menu(pickRoute, state))->show();
-		return operationStatus::ExitMenu;
+		Menu(pickRoute, state).show();
+		return OperationStatus::ExitMenu;
 	}
 };
 
 class ListTaxis : public MenuItem {
 public:
-	ListTaxis(int id) : MenuItem("Add route to taxi", id, false)
-	{}
+	ListTaxis(int id) : MenuItem("Add route to taxi", id, false) {}
 
-	operationStatus handle(TaxiState& state) {
+	OperationStatus handle(TaxiState& state) {
 		system("cls");
 		std::vector<MenuItem*> pickTaxi;
 		for (int index = 0; index < state.getCars()->size(); index++) {
 			Car& car = state.getCars()->at(index);
-			pickTaxi.push_back(new ListRoutesForTaxi(car, index + 1,
-								car.getBrand() + car.getModel(), index == 0)); // the first element should be active
+			MenuItem * menuItem = new ListRoutesForTaxi(car, index + 1,
+				car.getBrand() + car.getModel(), index == 0); // the first element should be active
+			pickTaxi.push_back(menuItem); 
+			delete menuItem;
 		}
-		(new Menu(pickTaxi, state))->show();
-		return operationStatus::Continue;
+		Menu(pickTaxi, state).show();
+		return OperationStatus::Continue;
 	}
 };
 
@@ -149,7 +152,7 @@ class SaveToFile : public MenuItem {
 public:
 	SaveToFile(int id) : MenuItem("Save current configuration to file", id, false) {}
 
-	operationStatus handle(TaxiState& state) {
+	OperationStatus handle(TaxiState& state) {
 		system("cls");
 		std::string fileName;
 		std::ofstream file;
@@ -164,7 +167,7 @@ public:
 			file << *it;
 		}
 
-		return operationStatus::Continue;
+		return OperationStatus::Continue;
 	}
 };
 
@@ -172,7 +175,7 @@ class LoadFromFile : public MenuItem {
 public:
 	LoadFromFile(int id) : MenuItem("Load configuration from file", id, false) {}
 
-	operationStatus handle(TaxiState& state) {
+	OperationStatus handle(TaxiState& state) {
 		system("cls");
 		enum class ReadState
 		{
@@ -205,20 +208,22 @@ public:
 			case ReadState::Car:
 				iss >> *car;
 				state.getCars()->push_back(*car);
+				delete car;
 				break;
 			case ReadState::Route:
 				iss >> *route;
 				state.getRoutes()->push_back(*route);
 				readState = ReadState::Point;
+				delete route;
 				break;
 			case ReadState::Point:
 				point = new Point();
 				iss >> *point;
 				state.getRoutes()->back().addPoint(*point);
+				delete point;
 				break;
 			}
 		}
-
-		return operationStatus::Continue;
+		return OperationStatus::Continue;
 	}
 };

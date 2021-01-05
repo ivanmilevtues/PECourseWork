@@ -15,7 +15,6 @@
 */
 
 /// TODO:
-/// Change new Menu -> with just menu
 /// Check on destructos and destructing items in vectors
 
 #include <iostream>
@@ -30,7 +29,7 @@ void menu(TaxiState state) {
     items.push_back(new ListTaxis(3));
     items.push_back(new SaveToFile(4));
     items.push_back(new LoadFromFile(5));
-    items.push_back(new ExitMenuItem(6));
+    items.push_back(new ExitMenu(6));
 
     Menu menu = Menu(items, state);
     menu.show();
