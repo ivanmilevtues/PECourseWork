@@ -22,8 +22,10 @@
 #include "MenuItem.h"
 #include "MenuItems.cpp"
 
-void menu(TaxiState state) {
-    std::vector<MenuItem *> items;
+int main()
+{
+    TaxiState state;
+    std::vector<MenuItem*> items;
     items.push_back(new CreateCar(true));
     items.push_back(new CreateRoute(2));
     items.push_back(new ListTaxis(3));
@@ -33,11 +35,6 @@ void menu(TaxiState state) {
 
     Menu menu = Menu(items, state);
     menu.show();
-}
 
-int main()
-{
-    TaxiState state;
-    menu(state);
     return 0;
 }

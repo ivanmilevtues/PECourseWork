@@ -19,7 +19,7 @@ public:
 
 	virtual OperationStatus handle(TaxiState& parameter) = 0;
 
-	friend std::ostream& operator<<(std::ostream& os, const MenuItem& dt);
+	friend std::ostream& operator<<(std::ostream& os, const MenuItem& item);
 
 private:
 	int id;
