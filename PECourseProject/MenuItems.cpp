@@ -15,7 +15,7 @@ public:
 	}
 
 	OperationStatus handle(TaxiState& state) {
-		std::string brand, model;
+		std::string brand, model, errorMessage;
 		unsigned int years, maximumLoadInKg;
 		unsigned short numberOfSeats;
 		float lph;
@@ -23,23 +23,46 @@ public:
 		system("cls");
 		std::cout << "Create new car" << std::endl;
 
-		std::cout << "Enter brand name:";
-		getline(std::cin, brand);
+		do {
+			std::cout << errorMessage << "Enter brand name:";
+			getline(std::cin, brand);
+			errorMessage = "Brand name cannot be empty! ";
+		} while (brand.size() == 0);
+		errorMessage = "";
 
-		std::cout << std::endl << "Enter model name:";
-		getline(std::cin, model);
+		do {
+			std::cout << std::endl << errorMessage << "Enter model name:";
+			getline(std::cin, model);
+			errorMessage = "Model name cannot be empty! ";
+		} while (model.size() == 0);
+		errorMessage = "";
 
-		std::cout << std::endl << "Enter how old the car is:";
-		std::cin >> years;
+		do {
+			std::cout << std::endl << errorMessage << "Enter how old the car is:";
+			std::cin >> years;
+			errorMessage = "Car age cannot be bigger than 100 and less than 0! ";
+		} while (years > 100 || years < 0);
+		errorMessage = "";
 
-		std::cout << std::endl << "Enter the number of seats:";
-		std::cin >> numberOfSeats;
+		do {
+			std::cout << std::endl << errorMessage << "Enter the number of seats:";
+			std::cin >> numberOfSeats;
+			errorMessage = "The number of seats cannot be less than 2 and bigger than 100! ";
+		} while (numberOfSeats < 2 || numberOfSeats > 100);
+		errorMessage = "";
 
-		std::cout << std::endl << "Enter the maximum load in kg:";
-		std::cin >> maximumLoadInKg;
+		do {
+			std::cout << std::endl << errorMessage << "Enter the maximum load in kg:";
+			std::cin >> maximumLoadInKg;
+			errorMessage = "The maximum load cannot be less or equal than 0! ";
+		} while (maximumLoadInKg <= 0);
+		errorMessage = "";
 
-		std::cout << std::endl << "Enter the lph rate for the car:";
-		std::cin >> lph;
+		do {
+			std::cout << std::endl << "Enter the lph rate for the car:";
+			std::cin >> lph;
+			errorMessage = "The lph cannot be less than or equal to 0 !";
+		} while (lph <= 0);
 
 		state.getCars()->push_back(Car(brand, model, years, numberOfSeats, maximumLoadInKg, lph));
 		std::cout << "A new car was added.";
@@ -54,22 +77,30 @@ public:
 	{}
 
 	OperationStatus handle(TaxiState& state) {
-		std::string routeName;
+		std::string routeName, errorMessage;
 		int dailyDrives;
 
 		system("cls");
-		std::cout << "Pick name for the route" << std::endl;
-		getline(std::cin, routeName);
-		std::cout << "How many times the route will be done in a day" << std::endl;
-		std::cin >> dailyDrives;
+		do {
+			std::cout << errorMessage << "Pick name for the route:" << std::endl;
+			getline(std::cin, routeName);
+			errorMessage = "The route name cannot be empty! ";
+		} while (routeName.size() == 0);
+		errorMessage = "";
+
+		do {
+			std::cout << errorMessage << "How many times the route will be done in a day" << std::endl;
+			std::cin >> dailyDrives;
+			errorMessage = "The number of daily drives cannot be less than or equal to 0! ";
+		} while (dailyDrives <= 0);
 
 		Route route = Route(routeName, dailyDrives);
 		std::cout << "New route added" << std::endl;
 		do {
-			int x, y;
-			std::cout << "Input route's point x and y axis" << std::endl;
-			std::cin >> x >> y;
-			route.addPoint(Point(x, y));
+			double lat, lng;
+			std::cout << "Input route's point latitude and longtitude" << std::endl;
+			std::cin >> lat >> lng;
+			route.addPoint(Point(lat, lng));
 			std::cout << "Point created!" << std::endl;
 			std::cout << "Press q to quit. To continue press any other key." << std::endl;
 		} while (_getch() != 'q');
@@ -122,7 +153,6 @@ public:
 			Route& route = state.getRoutes()->at(id);
 			MenuItem* item = new PickRouteForTaxi(car, route, id + 1, route.getName(), id == 0);
 			pickRoute.push_back(item);
-			delete item;
 		}
 		Menu(pickRoute, state).show();
 		return OperationStatus::ExitMenu;
@@ -141,7 +171,6 @@ public:
 			MenuItem * menuItem = new ListRoutesForTaxi(car, index + 1,
 				car.getBrand() + car.getModel(), index == 0); // the first element should be active
 			pickTaxi.push_back(menuItem); 
-			delete menuItem;
 		}
 		Menu(pickTaxi, state).show();
 		return OperationStatus::Continue;
