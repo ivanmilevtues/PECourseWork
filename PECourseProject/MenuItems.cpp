@@ -24,15 +24,15 @@ public:
 		std::cout << "Create new car" << std::endl;
 
 		do {
-			std::cout << errorMessage << "Enter brand name:";
-			getline(std::cin, brand);
+			std::cout << errorMessage << "Enter brand name(There shouldn't be any white spaces in the brand name):";
+			std::cin >> brand;
 			errorMessage = "Brand name cannot be empty! ";
 		} while (brand.size() == 0);
 		errorMessage = "";
 
 		do {
-			std::cout << std::endl << errorMessage << "Enter model name:";
-			getline(std::cin, model);
+			std::cout << std::endl << errorMessage << "Enter model name(There shouldn't be any white spaces in the moddel name):";
+			std::cin >> model;
 			errorMessage = "Model name cannot be empty! ";
 		} while (model.size() == 0);
 		errorMessage = "";
@@ -82,8 +82,8 @@ public:
 
 		system("cls");
 		do {
-			std::cout << errorMessage << "Pick name for the route:" << std::endl;
-			getline(std::cin, routeName);
+			std::cout << errorMessage << "Pick name for the route(There should not be any spaces in the name):" << std::endl;
+			std::cin >> routeName;
 			errorMessage = "The route name cannot be empty! ";
 		} while (routeName.size() == 0);
 		errorMessage = "";
@@ -131,7 +131,7 @@ public:
 	OperationStatus handle(TaxiState& state) {
 		system("cls");
 		car.setRoute(route);
-		std::cout << "Route " << route.getName() << " selected for taxi: '" << car.getModel() << "'" << std::endl;
+		std::cout << "Route " << route.getName() << " selected for taxi: '" << car.getModel() << "'" << ". The Route length is: " << route.getLength() << std::endl;
 		std::cout << "For this route "<< car.calculateNeededPetrol() << " liters will be needed.";
 		std::cout << "Press any key to continue" << std::endl;
 		_getch();
@@ -177,6 +177,22 @@ public:
 	}
 };
 
+class TaxiDetails : public MenuItem {
+public:
+	TaxiDetails(int id) : MenuItem("List detailed information for all taxis.", id, false) {}
+
+	OperationStatus handle(TaxiState& state) {
+		system("cls");
+		int id = 1;
+		for (std::vector<Car>::iterator it = state.getCars()->begin(); it != state.getCars()->end(); it++, id++) {
+			std::cout << id << ". " << *it << std::endl;
+		}
+		std::cout << "Press any key to continue." << std::endl;
+		_getch();
+		return OperationStatus::Continue;
+	}
+};
+
 class SaveToFile : public MenuItem {
 public:
 	SaveToFile(int id) : MenuItem("Save current configuration to file", id, false) {}
@@ -196,7 +212,25 @@ public:
 			file << *it;
 		}
 
+		int carId = 0;
+		file << "Relations:" << std::endl;
+		for (std::vector<Car>::iterator it = state.getCars()->begin(); it != state.getCars()->end(); it++, carId++) {
+			Route* route = (*it).getRoute();
+			if (route != NULL) {
+				int routeId = getRouteIndex(*route, state);
+				file << carId << " " << routeId << std::endl;
+			}
+		}
+
 		return OperationStatus::Continue;
+	}
+private:
+	int getRouteIndex(Route& route, TaxiState& state) {
+		for (int i = 0; i < state.getRoutes()->size(); i++) {
+			if (state.getRoutes()->at(i) == route) {
+				return i;
+			}
+		}
 	}
 };
 
@@ -210,7 +244,8 @@ public:
 		{
 			Car = 0,
 			Route = 1,
-			Point = 2
+			Point = 2,
+			Relations = 3,
 		};
 		ReadState readState = ReadState::Car; // This should be always the first state in the file
 		std::string fileName, line;
@@ -232,6 +267,10 @@ public:
 				route = new Route();
 				continue;
 			}
+			else if (!line.compare("Relations:")) {
+				readState = ReadState::Relations;
+				continue;
+			}
 			std::istringstream iss(line);
 			switch (readState) {
 			case ReadState::Car:
@@ -251,6 +290,10 @@ public:
 				state.getRoutes()->back().addPoint(*point);
 				delete point;
 				break;
+			case ReadState::Relations:
+				int carId, routeId;
+				iss >> carId >> routeId;
+				state.getCars()->at(carId).setRoute(state.getRoutes()->at(routeId));
 			}
 		}
 		return OperationStatus::Continue;

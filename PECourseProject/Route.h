@@ -19,6 +19,8 @@ public:
 	friend std::ofstream& operator<<(std::ofstream& os, const Route& route);
 
 	friend std::istream& operator>>(std::istream& is, Route& route);
+
+	friend bool operator==(const Route& left, const Route& right);
 private:
 	std::vector<Point> points;
 	int numberOfDailyDrives;

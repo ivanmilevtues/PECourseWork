@@ -32,11 +32,16 @@ int Route::getNumberOfDailyDrives()
 
 std::ostream& operator<<(std::ostream& os, const Route& route)
 {
-	os << route.name << " " << route.numberOfDailyDrives << " " << std::endl;
+	os << route.name << " " << route.numberOfDailyDrives << " " << std::endl << "Stop Points:" << std::endl;
 	for (std::vector<Point>::const_iterator it = route.points.begin(); it != route.points.end(); it++) {
 		os << *it;
 	}
 	return os;
+}
+
+bool operator==(const Route& left, const Route& right)
+{
+	return left.name == right.name && left.numberOfDailyDrives == right.numberOfDailyDrives;
 }
 
 std::istream& operator>>(std::istream& is, Route& route)

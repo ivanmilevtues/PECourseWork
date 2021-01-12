@@ -22,6 +22,7 @@ public:
 	float getLph();
 	float calculateNeededPetrol();
 	void setRoute(Route route);
+	Route* getRoute();
 	friend std::ostream& operator<<(std::ostream& os, const Car& car);
 	friend std::ofstream& operator<<(std::ofstream& os, const Car& car);
 

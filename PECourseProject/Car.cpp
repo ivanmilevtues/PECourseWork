@@ -83,10 +83,18 @@ void Car::setRoute(Route route)
 	this->route = route;
 }
 
+Route * Car::getRoute()
+{
+	if (this->route.getName().length() != 0) {
+		return &this->route;
+	}
+	return NULL;
+}
+
 std::ostream& operator<<(std::ostream& os, const Car& car)
 {
 	os << car.brand << " " << car.model << " " << car.years << " "
-		<< car.numberOfSeats << " " << car.maximumLoadInKg << " " << car.lph << " "
+		<< car.numberOfSeats << " " << car.maximumLoadInKg << " " << car.lph << std::endl
 		<< car.route << std::endl;
 	return os;
 }

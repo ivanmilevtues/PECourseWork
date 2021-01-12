@@ -1,6 +1,15 @@
 #include "Menu.h"
 #include <conio.h>
 
+Menu::~Menu()
+{
+    while (items.size() != 0) {
+        MenuItem * item = items.back();
+        items.pop_back();
+        delete item;
+    }
+}
+
 void Menu::show() {
     int selected = 0;
     MenuItem::OperationStatus handleResult = MenuItem::OperationStatus::Continue;

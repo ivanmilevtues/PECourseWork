@@ -31,7 +31,8 @@ int main()
     items.push_back(new ListTaxis(3));
     items.push_back(new SaveToFile(4));
     items.push_back(new LoadFromFile(5));
-    items.push_back(new ExitMenu(6));
+    items.push_back(new TaxiDetails(6));
+    items.push_back(new ExitMenu(7));
 
     Menu menu = Menu(items, state);
     menu.show();

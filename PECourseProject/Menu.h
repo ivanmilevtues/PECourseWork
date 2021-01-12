@@ -11,6 +11,8 @@ public:
 	Menu(std::vector<MenuItem*>& items, TaxiState& state): items(items), state(state) {
 	}
 
+	~Menu();
+
 	void show();
 };
 

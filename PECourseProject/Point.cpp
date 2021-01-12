@@ -11,16 +11,16 @@ Point::Point(double x, double y) :x(x), y(y)
 
 double Point::distanceTo(Point other)
 {
-	const long radius = 6371000;
-	double f1 = this->x * M_PI / 180;
-	double f2 = other.x * M_PI / 180;
-	double df = (other.x - this->x) * M_PI / 180;
-	double dlam = (other.y - this->y) * M_PI / 180;
+	const long radius = 6371;
+	double lat1 = this->x * M_PI / 180;
+	double lat2 = other.x * M_PI / 180;
+	double dlat = (other.x - this->x) * M_PI / 180;
+	double dlon = (other.y - this->y) * M_PI / 180;
 
-	double a = sin(df / 2) * sin(df / 2) + cos(f1) * cos(f2) * sin(dlam / 2) * sin(dlam / 2);
-	double c = atan2(sqrt(a), sqrt(1 - a));
+	double a = sin(dlat / 2) * sin(dlat / 2) + cos(lat1) * cos(lat2) * sin(dlon / 2) * sin(dlon / 2);
+	double c = 2 * atan2(sqrt(a), sqrt(1 - a));
 
-	return radius * c / 1000; // return in KM
+	return radius * c;
 }
 
 std::ostream& operator<<(std::ostream& os, const Point& point)
